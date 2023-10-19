@@ -7,6 +7,7 @@ import copyIcon from '@/assets/img/copy.svg'
 import { copyToClipboard, formatAddress, formatIpfsLink } from '@/utils/text.utils';
 import { ListingCardProps } from '@/interfaces/blockchain.interfaces';
 import { addressType } from '@/types/blockchain.types';
+import ListingActionButtons from '../ListingActionButtons/ListingActionButtons';
 
 const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
   const { getNftMetadata } = useMarketplace()
@@ -44,6 +45,8 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
           <p className={styles.dataValue}>{BigInt(listing.price).toString()}</p>
         </div>
       </div>
+
+      <ListingActionButtons listing={listing} listed={true} />
     </div>
   );
 };

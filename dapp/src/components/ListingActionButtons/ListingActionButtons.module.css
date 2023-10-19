@@ -1,0 +1,30 @@
+.actionButton {
+  background: rgba(244, 247, 248, 1);
+  height: 48px;
+  border-radius: 30px;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 17px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: rgba(25, 27, 29, 1);
+  cursor: pointer;
+  padding: 0 20px;
+  margin: 12px 0 0 0;
+  transition: all .2s ease-in-out;
+  justify-self: center;
+  align-self: center;
+  width: 100%;
+}
+
+.actionButton:hover {
+  background: rgb(223, 226, 227);
+}
+
+.actionButtonsContainer {
+  display: grid;
+  width: 100%;
+  gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+}
