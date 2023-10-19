@@ -18,7 +18,11 @@ contract Marketplace is ReentrancyGuard {
     struct Listing {
         uint256 price;
         address seller;
+        uint256 tokenId;
+        address tokenAddress;
     }
+
+    Listing[] public activeListings;
 
     IERC20 public tokenContract;  // The ERC20 token contract address
 
@@ -46,7 +50,8 @@ contract Marketplace is ReentrancyGuard {
         if (nft.getApproved(tokenId) != address(this)) {
             revert NotApprovedForMarketplace();
         }
-        s_listings[nftAddress][tokenId] = Listing(price, msg.sender);
+        s_listings[nftAddress][tokenId] = Listing(price, msg.sender, tokenId, nftAddress);
+        activeListings.push(Listing(price, msg.sender, tokenId, nftAddress));
         emit ItemListed(msg.sender, nftAddress, tokenId, price);
     }
 
@@ -58,8 +63,49 @@ contract Marketplace is ReentrancyGuard {
         isOwner(nftAddress, tokenId, msg.sender)
         isListed(nftAddress, tokenId)
     {
+        removeListingFromActiveListings(nftAddress, tokenId); 
         delete (s_listings[nftAddress][tokenId]);
         emit ItemCanceled(msg.sender, nftAddress, tokenId);
+    }
+
+    function removeListingFromActiveListings(address nftAddress, uint256 tokenId)
+        private
+        isOwner(nftAddress, tokenId, msg.sender)
+        isListed(nftAddress, tokenId)
+    {
+        for (uint256 i = 0; i < activeListings.length; i++) {
+            if (
+                activeListings[i].seller == msg.sender &&
+                activeListings[i].tokenId == tokenId &&
+                activeListings[i].tokenAddress == nftAddress
+            ) {
+                if (i != activeListings.length - 1) {
+                    activeListings[i] = activeListings[activeListings.length - 1];
+                }
+                activeListings.pop();
+                return;
+            }
+        }
+    }
+
+    function updateListingFromActiveListings(address nftAddress, uint256 tokenId, uint256 newPrice)
+        private
+        isOwner(nftAddress, tokenId, msg.sender)
+        isListed(nftAddress, tokenId)
+    {
+        for (uint256 i = 0; i < activeListings.length; i++) {
+            if (
+                activeListings[i].seller == msg.sender &&
+                activeListings[i].tokenId == tokenId &&
+                activeListings[i].tokenAddress == nftAddress
+            ) {
+                activeListings[i].price = newPrice;
+            }
+        }
+    }
+
+    function getAllActiveListings() external view returns (Listing[] memory) {
+        return activeListings;
     }
 
     function buyItem(
@@ -72,6 +118,7 @@ contract Marketplace is ReentrancyGuard {
         }
 
         s_proceeds[listedItem.seller] += listedItem.price;
+        removeListingFromActiveListings(nftAddress, tokenId); 
         delete (s_listings[nftAddress][tokenId]);
         tokenContract.transferFrom(msg.sender, listedItem.seller, listedItem.price);
         IERC721(nftAddress).safeTransferFrom(
@@ -97,7 +144,18 @@ contract Marketplace is ReentrancyGuard {
         }
 
         s_listings[nftAddress][tokenId].price = newPrice;
+        updateListingFromActiveListings(nftAddress, tokenId, newPrice);
         emit ItemListed(msg.sender, nftAddress, tokenId, newPrice);
+    }
+
+    function withdrawProceeds() external {
+        uint256 proceeds = s_proceeds[msg.sender];
+        if (proceeds <= 0) {
+            revert NoProceeds();
+        }
+        s_proceeds[msg.sender] = 0;
+
+        tokenContract.transfer(msg.sender, proceeds);
     }
 
     function getListing(

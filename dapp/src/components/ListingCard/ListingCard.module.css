@@ -1,0 +1,83 @@
+.card {
+  background: white;
+  width: 400px;
+  height: 600px;
+  padding: 88px 52px 48px;
+  box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 28px;
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  justify-self: center;
+  align-self: center;
+}
+
+.nftImage {
+  margin-bottom: 24px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 24px;
+}
+
+.nftName {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: rgba(25, 27, 29, 1);  
+  margin: 0;
+  margin-bottom: 32px;
+}
+
+.cardData {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border-radius: 24px;
+  padding: 24px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.dataTitle {
+  color: rgba(185, 191, 194, 1);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 17px;
+  letter-spacing: 0em;
+  text-align: left;
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.dataValue {
+  color: rgba(25, 27, 29, 1);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 17px;
+  letter-spacing: 0em;
+  text-align: left;
+  margin: 0;
+}
+
+.copyContractButton {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  border-radius: 50%;
+  border: none;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(25, 27, 29, .03);
+  cursor: pointer;
+  transition: all .2s ease-in-out;
+}
+
+.copyContractButton:hover {
+  background-color: rgba(25, 27, 29, .05);
+}

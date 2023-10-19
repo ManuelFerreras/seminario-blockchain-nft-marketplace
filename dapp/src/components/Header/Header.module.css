@@ -1,0 +1,75 @@
+.header {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 20px 40px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 16px 16px;
+    margin-bottom: 3rem;
+}
+
+.logo {
+  align-self: center;
+  justify-self: center;
+}
+
+.headerLogo {
+  margin: 0;
+  font-size: 24px;
+  background: -webkit-linear-gradient(0, #000, #23ff01);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  width: auto;
+  animation: moveGradient 6s linear infinite;
+  background-size: 200% 100%;
+  cursor: default;
+}
+
+.headerNav {
+  align-self: center;
+  justify-self: center;
+}
+
+.headerLink {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 22px;
+  margin: 0 24px 0 0;
+  cursor: pointer;
+  color: rgba(25, 27, 29, .6);
+  transition: all .2s ease-in-out;
+}
+
+.headerLink:hover {
+  color: rgba(25, 27, 29, 1);
+}
+
+.headerLink:last-child {
+  margin: 0;
+}
+
+@keyframes moveGradient {
+  0% {
+    background-position: 75% 50%; /* Start from the right */
+  }
+  50% {
+    background-position: 25% 50%; /* End on the left */
+  }
+  100% {
+    background-position: 75% 50%; /* Start from the right */
+  }
+}
+
+@media (max-width: 1000px) {
+  .header {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 0;
+  }
+}
+
+@media (max-width: 500px) {
+  .header {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem 0;
+  }
+}
