@@ -1,14 +1,9 @@
-import { redirect } from 'next/navigation';
 import React from 'react';
 import styles from './Header.module.css';
 import UserCard from '../UserCard/UserCard';
+import Link from 'next/link';
 
 const Header: React.FC = () => {
-  const redirectTo = (path: string) => {
-    console.debug(path)
-    redirect(path); 
-  }
-
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
@@ -16,8 +11,8 @@ const Header: React.FC = () => {
       </div>
 
       <nav className={styles.headerNav}>
-        <a className={styles.headerLink} onClick={() => redirectTo('/listings')}>Listings</a>
-        <a className={styles.headerLink} onClick={() => redirectTo('/collectibles')}>Collectibles</a>
+        <Link className={styles.headerLink} href={'/listings'}>Listings</Link>
+        <Link className={styles.headerLink} href={'/collectibles'}>Collectibles</Link>
       </nav>
 
       <UserCard />

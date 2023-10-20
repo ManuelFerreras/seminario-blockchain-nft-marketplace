@@ -21,7 +21,7 @@ const UserCard = () => {
         <Image src={metamaskIcon} width={40} height={40} alt='Metamask' className={styles.metamaskIcon} />
 
         <div>
-          <p className={styles.chainLegend}>{chainToNetwork[chain?.id ?? 1]} <div className={styles.connectedDot} /></p>
+          <p className={styles.chainLegend}>{chainToNetwork[chain?.id ?? 1]} <span className={styles.connectedDot} /></p>
           <p className={styles.addressLegend}>{formatAddress(address as addressType)}</p>
         </div>
       </div>

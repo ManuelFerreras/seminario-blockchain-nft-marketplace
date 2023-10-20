@@ -70,12 +70,9 @@ contract Marketplace is ReentrancyGuard {
 
     function removeListingFromActiveListings(address nftAddress, uint256 tokenId)
         private
-        isOwner(nftAddress, tokenId, msg.sender)
-        isListed(nftAddress, tokenId)
     {
         for (uint256 i = 0; i < activeListings.length; i++) {
             if (
-                activeListings[i].seller == msg.sender &&
                 activeListings[i].tokenId == tokenId &&
                 activeListings[i].tokenAddress == nftAddress
             ) {

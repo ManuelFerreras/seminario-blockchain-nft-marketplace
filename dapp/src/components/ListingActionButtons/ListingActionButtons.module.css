@@ -28,3 +28,8 @@
   gap: 12px;
   grid-template-columns: repeat(2, 1fr);
 }
+
+.loadingButton {
+  opacity: 0.5;
+  cursor: default;
+}

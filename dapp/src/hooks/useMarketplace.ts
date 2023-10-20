@@ -1,8 +1,10 @@
-import { useContractRead, useContractWrite } from 'wagmi'
+import { useAccount, useContractRead, useContractReads, useContractWrite, useWaitForTransaction } from 'wagmi'
 import { marketplaceAbi, nftsAbi, tokenAbi } from '@/constants/abis.constants';
 import { Listing, addressType } from '@/types/blockchain.types';
 
 const useMarketplace = () => {
+  const { address } = useAccount();
+
   const getMarkeplaceListings = () => {
     const { data, isError, isLoading } = useContractRead({
       address: process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as addressType,
@@ -24,61 +26,120 @@ const useMarketplace = () => {
   }
 
   const cancelNft = (listing: Listing) => {
-    const { data, isLoading, isSuccess, write } = useContractWrite({
+    const { data, isLoading, isSuccess, write, writeAsync } = useContractWrite({
       address: process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as addressType,
       abi: marketplaceAbi,
       functionName: 'cancelListing',
       args: [listing.tokenAddress, listing.tokenId]
     })
 
-    return { data, isLoading, isSuccess, write };
+    const waitTransaction = useWaitForTransaction({
+      hash: data?.hash,
+    })
+
+    return { data, isLoading, isSuccess, write, writeAsync, waitTransaction };
   }
 
   const buyNft = (listing: Listing) => {
-    const { data, isLoading, isSuccess, write } = useContractWrite({
+    const { data, isLoading, isSuccess, write, writeAsync } = useContractWrite({
       address: process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as addressType,
       abi: marketplaceAbi,
       functionName: 'buyItem',
       args: [listing.tokenAddress, listing.tokenId]
     })
 
-    return { data, isLoading, isSuccess, write };
+    const waitTransaction = useWaitForTransaction({
+      hash: data?.hash,
+    })
+
+    return { data, isLoading, isSuccess, write, writeAsync, waitTransaction };
   }
 
-  const updateNft = (listing: Listing, newPrice: number) => {
-    const { data, isLoading, isSuccess, write } = useContractWrite({
+  const updateNft = () => {
+    const { data, isLoading, isSuccess, write, writeAsync } = useContractWrite({
       address: process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as addressType,
       abi: marketplaceAbi,
-      functionName: 'updateListing',
-      args: [listing.tokenAddress, listing.tokenId, newPrice]
+      functionName: 'updateListing'
     })
 
-    return { data, isLoading, isSuccess, write };
+    const waitTransaction = useWaitForTransaction({
+      hash: data?.hash,
+    })
+
+    return { data, isLoading, isSuccess, write, writeAsync, waitTransaction };
   }
 
-  const approveNft = (tokenAddress: addressType, approver: addressType, tokenId: number) => {
-    const { data, isLoading, isSuccess, write } = useContractWrite({
+  const approveNft = (tokenAddress: addressType) => {
+    const { data, isLoading, isSuccess, write, writeAsync } = useContractWrite({
       address: tokenAddress,
       abi: nftsAbi,
-      functionName: 'approve',
-      args: [approver, tokenId]
+      functionName: 'approve'
     })
 
-    return { data, isLoading, isSuccess, write };
+    const waitTransaction = useWaitForTransaction({
+      hash: data?.hash,
+    })
+
+    return { data, isLoading, isSuccess, write, writeAsync, waitTransaction };
   }
 
-  const approveToken = (spender: addressType, amount: number) => {
-    const { data, isLoading, isSuccess, write } = useContractWrite({
+  const approveToken = () => {
+    const { data, isLoading, isSuccess, write, writeAsync } = useContractWrite({
       address: process.env.NEXT_PUBLIC_TOKEN_ADDRESS as addressType,
       abi: tokenAbi,
-      functionName: 'approve',
-      args: [spender, amount]
+      functionName: 'approve'
     })
 
-    return { data, isLoading, isSuccess, write };
+    const waitTransaction = useWaitForTransaction({
+      hash: data?.hash,
+    })
+
+    return { data, isLoading, isSuccess, write, writeAsync, waitTransaction };
   }
 
-  return { getMarkeplaceListings, getNftMetadata, cancelNft, buyNft, updateNft, approveNft, approveToken };
+  const getNftsBalance = () => {
+    const { data, isError, isLoading } = useContractRead({
+      address: process.env.NEXT_PUBLIC_NFTS_ADDRESS as addressType,
+      abi: nftsAbi,
+      functionName: 'balanceOf',
+      args: [address]
+    })
+    return { data, isError, isLoading };
+  }
+
+  const getNftsData = (config: any) => {
+    const { data, isError, isLoading } = useContractReads(config)
+
+    return { data, isError, isLoading };
+  }
+
+  const getListingData = (listing: Listing) => {
+    const { data, isError, isLoading } = useContractRead({
+      address: process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as addressType,
+      abi: marketplaceAbi,
+      functionName: 'getListing',
+      watch: true,
+      args: [listing?.tokenAddress, listing?.tokenId]
+    })
+
+    return { data, isError, isLoading };
+  }
+
+  const listNft = () => {
+    const { data, isLoading, isSuccess, write, writeAsync } = useContractWrite({
+      address: process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as addressType,
+      abi: marketplaceAbi,
+      functionName: 'listItem'
+    })
+
+    const waitTransaction = useWaitForTransaction({
+      hash: data?.hash,
+    })
+
+    return { data, isLoading, isSuccess, write, writeAsync, waitTransaction };
+  }
+
+  return { listNft, getListingData, getNftsData, getNftsBalance, getMarkeplaceListings, getNftMetadata, cancelNft, buyNft, updateNft, approveNft, approveToken };
 };
 
 export default useMarketplace;
