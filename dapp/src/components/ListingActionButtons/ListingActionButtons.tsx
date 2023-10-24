@@ -51,6 +51,11 @@ const ListingActionButtons = ({ listing }: Props) => {
     setBuyingNft(true);
     const price = askPriceByAlert();
 
+    if (!price || isNaN(Number(price))) {
+      setBuyingNft(false);
+      return;
+    }
+
     await listNftInteraction.writeAsync({
       args: [listing.tokenAddress, listing.tokenId, price]
     });
@@ -97,7 +102,11 @@ const ListingActionButtons = ({ listing }: Props) => {
       setBuyingNft(false);
       setApproved(false);
     }
-  }, [approveNftInteraction.waitTransaction.isSuccess, approveNftInteraction.waitTransaction.isError]);
+    else if (!approveNftInteraction.waitTransaction.isSuccess && !approveNftInteraction.isLoading) {
+      setBuyingNft(false);
+      setApproved(false);
+    }
+  }, [approveNftInteraction.waitTransaction.isSuccess, approveNftInteraction.waitTransaction.isError, approveNftInteraction.isLoading]);
 
   useEffect(() => {
     if (buyNftInteraction.waitTransaction.isSuccess && buyingNft) {
@@ -116,8 +125,11 @@ const ListingActionButtons = ({ listing }: Props) => {
     } else if (approveTokenInteraction.waitTransaction.isError) {
       setBuyingNft(false);
       setApproved(false);
+    } else if (!approveTokenInteraction.waitTransaction.isSuccess && !approveTokenInteraction.isLoading) {
+      setBuyingNft(false);
+      setApproved(false);
     }
-  }, [approveTokenInteraction.waitTransaction.isSuccess, approveTokenInteraction.waitTransaction.isError]);
+  }, [approveTokenInteraction.waitTransaction.isSuccess, approveTokenInteraction.waitTransaction.isError, approveTokenInteraction.isLoading]);
 
   useEffect(() => {
     setLoading(cancelNftInteraction.isLoading || buyNftInteraction.isLoading || updateNftInteraction.isLoading || approveNftInteraction.isLoading || approveTokenInteraction.isLoading || buyingNft);
