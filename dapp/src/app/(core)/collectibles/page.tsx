@@ -82,7 +82,7 @@ export default function Collectibles() {
       <main className={styles.main}>
         <div className={styles.listingsTable}>
           {
-            Array.isArray(nftListings) && nftListings.map((listing: Listing, index: number) => <ListingCard listed={false} listing={listing} key={index} />)
+            Array.isArray(nftListings) && nftListings.map((listing: Listing, index: number) => <ListingCard listing={listing} key={index} />)
           }
         </div>
       </main>

@@ -28,7 +28,7 @@ export default function Listings() {
       <main className={styles.main}>
         <div className={styles.listingsTable}>
           {
-            Array.isArray(data) && data.map((listing: Listing, index: number) => <ListingCard listed={true} listing={listing} key={index} />)
+            Array.isArray(data) && data.map((listing: Listing, index: number) => <ListingCard listing={listing} key={index} />)
           }
         </div>
       </main>

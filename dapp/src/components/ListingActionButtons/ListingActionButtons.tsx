@@ -7,10 +7,9 @@ import { useEffect, useState } from 'react';
 
 type Props = {
   listing: Listing;
-  listed: boolean;
 };
 
-const ListingActionButtons = ({ listing, listed }: Props) => {
+const ListingActionButtons = ({ listing }: Props) => {
   const [approved, setApproved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [buyingNft, setBuyingNft] = useState(false);
@@ -125,7 +124,7 @@ const ListingActionButtons = ({ listing, listed }: Props) => {
   }, [cancelNftInteraction.isLoading, buyNftInteraction.isLoading, updateNftInteraction.isLoading, approveNftInteraction.isLoading, approveTokenInteraction.isLoading, buyingNft]);
 
   if (listing.seller === address) {
-    if (!listed || listing?.price <= 0) {
+    if (listing?.price <= 0) {
       return <button onClick={() => approveNftClick()} disabled={loading} className={`${styles.actionButton} ${styles.listButton} ${loading ? styles.loadingButton : ''}`}>List</button>;
     } else {
       return (

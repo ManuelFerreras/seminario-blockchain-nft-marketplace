@@ -9,7 +9,7 @@ import { ListingCardProps } from '@/interfaces/blockchain.interfaces';
 import { Listing, addressType } from '@/types/blockchain.types';
 import ListingActionButtons from '../ListingActionButtons/ListingActionButtons';
 
-const ListingCard: React.FC<ListingCardProps> = ({ listing, listed }) => {
+const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
   const { getNftMetadata, getListingData } = useMarketplace()
   const { data } = getNftMetadata(listing.tokenAddress as addressType, listing.tokenId)
   const { data: listingData } = getListingData(listing)
@@ -60,7 +60,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, listed }) => {
         </div>
       }
 
-      <ListingActionButtons listing={listing} listed={listed} />
+      <ListingActionButtons listing={listing} />
     </div>
   );
 };
